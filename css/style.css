@@ -1,0 +1,117 @@
+.status-headline {
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 18px;
+    border-bottom: 1px solid;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    color: #67a30a;
+}
+
+.status-headline img {
+    width: 20px;
+}
+
+.status-headline.lizens-inaktiv {
+    color: #d40000;
+    border-bottom: 10px solid #d40000;
+    text-align: center;
+}
+
+.lizens-aktiv i {
+    color: #67a30a;
+}
+
+.notfall-hotline {
+    background-color: #ffe8bd;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.notfall-hotline span {
+    float: left;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.lizens-inaktiv i {
+    color: #d40000;
+}
+
+.status-liste.lizens-inaktiv {
+    border-bottom: 10px solid #d40000;
+    padding-bottom: 5px;
+}
+
+.status-liste li img {
+    width: 14px;
+    margin-bottom: -2px;
+}
+
+.vx-support-wrapper {
+    background-image: url(images/vx-bg.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100px;
+    background-position-x: 220px;
+    background-position-y: 40px;
+}
+
+.vx-support-wrapper span {
+    border-top: 1px solid;
+    margin-top: 29px;
+    font-size: 10px;
+    width: 100%;
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+.pulse {
+    animation-name: pulse_animation;
+    animation-duration: 5000ms;
+    transform-origin: 50% 50%;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulse_animation {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.50);
+    }
+    50% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1.50);
+    }
+    70% {
+        transform: scale(1);
+    }
+    80% {
+        transform: scale(1.50);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* DISABLE VISUAL COMPOSER LIZENS BOX */
+
+.vc_license-activation-notice {
+    display: none;
+}
+
+
+/* .dce-generic-notice,
+.plugin-update-tr {
+    display: none !important;
+} */

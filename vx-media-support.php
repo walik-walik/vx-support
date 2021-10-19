@@ -47,7 +47,7 @@ function vx_media_dashboard_help()
     <div class="vx-support-wrapper">
         <p>Herzlich Willkommen in Ihrem Backend! Sie benötigen Hilfe? <br><br>Sie erreichen uns unter: <br>
             <strong>Mobil:</strong> 07307/3009274<br>
-            <strong>Mail:</strong> office@vx-media.de<br><br>
+            <strong>Mail:</strong> support@vx-media.de<br><br>
 
             Ihr Design & Code Team<br>
             <strong>VX Media GmbH</strong>
@@ -63,8 +63,8 @@ function vx_media_dashboard_help()
 // Status Dashboard
 function vx_media_dashboard_status()
 {
-    //FALSE = KEINE LIZENS
-    $vx_media_status_lizens = false;
+    //FALSE = LIZENS AKTIV
+    $vx_media_status_lizens = true;
 
     // ########################## Wenn Lizens vorhanden ##########################
 
@@ -225,5 +225,34 @@ function wpse50787_remove_contextual_help()
 }
 add_action('admin_head', 'wpse50787_remove_contextual_help');
 
+
+// Entferne unötige Menü Punkte
+add_action('admin_init', 'my_remove_menu_pages');
+function my_remove_menu_pages()
+{
+    // Evtl. spätzer wenn nach der ID Sortiert werden muss
+    // global $user_ID;
+    // Wenn eigene ID dann Blende die Menü Punkte aus
+    // if ($user_ID != 1) {
+
+    // Entferne Wenn User Editor ist
+    if (current_user_can('editor')) { //your user id
+
+        remove_menu_page('edit-comments.php'); // Comments
+        remove_menu_page('edit.php?post_type=elementor_library'); // Elementor Templates
+        remove_menu_page('tools.php'); // Werkzeuge
+
+        //remove_menu_page('edit.php'); // Posts
+        //remove_menu_page('upload.php'); // Media
+        //remove_menu_page('link-manager.php'); // Links
+        //remove_menu_page('edit.php?post_type=page'); // Pages
+        //remove_menu_page('plugins.php'); // Plugins
+        //remove_menu_page('themes.php'); // Appearance
+        //remove_menu_page('users.php'); // Users
+        //remove_menu_page('options-general.php'); // Settings
+        //remove_menu_page('edit.php'); // Posts
+        //remove_menu_page('upload.php'); // Media
+    }
+}
 
 ?>

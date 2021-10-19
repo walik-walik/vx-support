@@ -28,11 +28,14 @@ Ortsstrasse 31<br>
 89250 Senden<br><br>
 
 <strong>Tel.:</strong> 07307/3009274<br>
-<strong>Mail:</strong> office@vx-media.de<br>
+<strong>Mail:</strong> support@vx-media.de<br>
 <strong>www.vx-media.de</strong>
 
 
 == Changelog ==
+<strong>--- 1.1.6 ---<strong>
+Securtiy // Admin URL
+
 <strong>--- 1.0.6 ---<strong>
 Fix: Minor fixes
 

@@ -1,10 +1,10 @@
 <?php
 /*
 /**
-Plugin Name: VX Media - Support
+Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
-Description: Webseite durch leistungsfähige und professionelle Codes erweitern.
-Version: 1.1.4
+Description: WP durch leistungsfähige und professionelle Codes erweitern.
+Version: 1.1.6
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
 License: GPL12
@@ -18,13 +18,6 @@ BannerLow: https://vx-media.de/VX-PLUGINS/vx-media-support/image/banner-722x250.
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
-
-/* ================================================================================================ */
-/*                                  WP Plugin Update Server                                         */
-/* ================================================================================================ */
-
-
-/* ================================================================================================ */
 
 function vx_support_style()
 {
@@ -48,7 +41,7 @@ function vx_media_dashboard_widgets()
 // Hilfe Dashboard
 function vx_media_dashboard_help()
 {
-    $versionPlugin = "1.1.4";
+    $versionPlugin = "1.1.6";
 ?>
 
     <div class="vx-support-wrapper">
@@ -70,11 +63,8 @@ function vx_media_dashboard_help()
 // Status Dashboard
 function vx_media_dashboard_status()
 {
-
-    //$vx_media_status_lizens = get_option('license_key_vx-media-support');
+    //FALSE = KEINE LIZENS
     $vx_media_status_lizens = false;
-
-
 
     // ########################## Wenn Lizens vorhanden ##########################
 
@@ -151,7 +141,6 @@ function set_dashboard_meta_order()
     );
     update_user_meta($id, 'meta-box-order_dashboard', $meta_value); //update the user meta with the user's ID, the meta_key meta-box-order_dashboard, and the new meta_value
 }
-
 
 
 //* Administrator Footer

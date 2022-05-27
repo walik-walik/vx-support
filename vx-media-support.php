@@ -4,7 +4,7 @@
 Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
 Description: WP durch leistungsfähige und professionelle Codes erweitern.
-Version: 1.1.6
+Version: 1.1.7
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
 License: GPL12
@@ -41,7 +41,7 @@ function vx_media_dashboard_widgets()
 // Hilfe Dashboard
 function vx_media_dashboard_help()
 {
-    $versionPlugin = "1.1.6";
+    $versionPlugin = "1.1.7";
 ?>
 
     <div class="vx-support-wrapper">
@@ -63,15 +63,13 @@ function vx_media_dashboard_help()
 // Status Dashboard
 function vx_media_dashboard_status()
 {
-    //FALSE = LIZENS AKTIV
-    $vx_media_status_lizens = true;
 
-    // ########################## Wenn Lizens vorhanden ##########################
 
-    if ($vx_media_status_lizens == false) {
+    // ########################## LIZENS CHECK ##########################
+
+    if (get_option('vx_license') == 'YNpbWuC98qRMtj2j') {
 
         $checkImage = plugin_dir_url(__FILE__) . 'css/images/check-circle-solid.svg';
-        $checkImageThumbUp = plugin_dir_url(__FILE__) . 'css/images/thumbs-up-solid.svg';
 
     ?>
 
@@ -125,7 +123,7 @@ function vx_media_dashboard_status()
         </div>
 
 
-<?php }
+    <?php }
 }
 
 // Sortierung der Dashboard Felder immer auf die selbe Position
@@ -254,5 +252,123 @@ function my_remove_menu_pages()
         //remove_menu_page('upload.php'); // Media
     }
 }
+
+
+// Wartungsvertrag Meldung
+function blackhole_tools_admin_notice()
+{
+
+    if (get_option('vx_license') != 'YNpbWuC98qRMtj2j') {
+        $class = 'notice notice-error';
+        $message = __('⚠⚠⚠ ACHTUNG - KEIN WARTUNGS VERTRAG! KEINE UPDATES, BACKUP & WIEDERHERSTELLUNG ⚠⚠⚠', 'vx-media');
+
+        printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
+    }
+}
+add_action('admin_notices', 'blackhole_tools_admin_notice');
+
+
+// Custom Admin Page
+function my_admin_menu()
+{
+    add_submenu_page(
+        'tools.php',
+        __('VX Safety', 'vx-media'),
+        __('VX Safety', 'vx-media'),
+        'manage_options',
+        'vxSettings-page',
+        'my_admin_page_contents',
+        'dashicons-schedule',
+        3
+    );
+}
+add_action('admin_menu', 'my_admin_menu');
+
+function my_admin_page_contents()
+{
+    ?>
+    <h1> <?php esc_html_e('VX Media GmbH', 'vx-media'); ?> </h1>
+    <form method="POST" action="options.php">
+        <?php
+        settings_fields('vxSettings-page');
+        do_settings_sections('vxSettings-page');
+        submit_button();
+        ?>
+    </form>
+<?php
+}
+
+
+add_action('admin_init', 'my_settings_init');
+
+function my_settings_init()
+{
+
+    add_settings_section(
+        'vxSettings_page_setting_section',
+        __('Settings', 'vx-media'),
+        'my_setting_section_callback_function',
+        'vxSettings-page'
+    );
+
+    add_settings_field(
+        'vx_license',
+        __('Wartungsvertrag Lizenz', 'vx-media'),
+        'vx_license_setting',
+        'vxSettings-page',
+        'vxSettings_page_setting_section'
+    );
+
+
+    // Next, we will introduce the fields for toggling the visibility of content elements.
+    add_settings_field(
+        'show_header',                      // ID used to identify the field throughout the theme
+        'Header',                           // The label to the left of the option interface element
+        'sandbox_toggle_header_callback',   // The name of the function responsible for rendering the option interface
+        'vxSettings-page',
+        'vxSettings_page_setting_section',
+        array(                              // The array of arguments to pass to the callback. In this case, just a description.
+            'Activate this setting to display the header.'
+        )
+    );
+
+
+    register_setting('vxSettings-page', 'vx_license');
+    register_setting('vxSettings-page', 'show_header');
+}
+
+
+
+
+function my_setting_section_callback_function()
+{
+    echo '<p>Intro text for our settings section</p>';
+}
+
+
+function vx_license_setting()
+{
+?>
+    <input type="password" id="vx_license" name="vx_license" value="<?php echo get_option('vx_license'); ?>">
+<?php
+}
+
+
+function sandbox_toggle_header_callback($args)
+{
+
+    //print_r(get_option('show_header'));
+
+    // Note the ID and the name attribute of the element match that of the ID in the call to add_settings_field
+    $html = '<input type="checkbox" id="show_header" name="show_header" value="1" ' . checked(1, get_option('show_header'), false) . '/>';
+
+    // Here, we will take the first argument of the array and add it to a label next to the checkbox
+    $html .= '<label for="show_header"> '  . $args[0] . '</label>';
+
+    echo $html;
+} // end sandbox_toggle_header_callback
+
+
+
 
 ?>

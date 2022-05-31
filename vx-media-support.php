@@ -267,6 +267,19 @@ function blackhole_tools_admin_notice()
 }
 add_action('admin_notices', 'blackhole_tools_admin_notice');
 
+// Sichtbarkeit für Suchmaschinen
+function vx_blog_public_admin_notice()
+{
+
+    if (get_option('blog_public') != 1) {
+        $class = 'notice notice-warning';
+        $message = __('⚠⚠⚠ ACHTUNG - Sichtbarkeit für Suchmaschinen ist auf NO-INDEX ⚠⚠⚠', 'vx-media');
+
+        printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
+    }
+}
+add_action('admin_notices', 'vx_blog_public_admin_notice');
+
 
 // Custom Admin Page
 function my_admin_menu()

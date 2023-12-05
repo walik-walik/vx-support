@@ -41,12 +41,12 @@ function vx_media_dashboard_widgets()
 // Hilfe Dashboard
 function vx_media_dashboard_help()
 {
-    $versionPlugin = "1.1.7";
+    $versionPlugin = "1.1.8";
 ?>
 
     <div class="vx-support-wrapper">
         <p>Herzlich Willkommen in Ihrem Backend! Sie benötigen Hilfe? <br><br>Sie erreichen uns unter: <br>
-            <strong>Mobil:</strong> 07307/3009274<br>
+            <strong>Mobil:</strong> 07303/9569185<br>
             <strong>Mail:</strong> support@vx-media.de<br><br>
 
             Ihr Design & Code Team<br>

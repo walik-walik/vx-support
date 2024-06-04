@@ -3,7 +3,7 @@
 Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
 Description: WP durch leistungsfähige und professionelle Codes erweitern.
-Version: 2.0.1
+Version: 2.0.2
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
 License: GPL12

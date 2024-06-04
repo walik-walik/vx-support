@@ -3,7 +3,7 @@
 Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
 Description: WP durch leistungsfähige und professionelle Codes erweitern.
-Version: 1.1.9
+Version: 1.1.8
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
 License: GPL12
@@ -47,8 +47,17 @@ function vx_support_check_for_updates() {
     }
 
     $latest_release = json_decode(wp_remote_retrieve_body($response));
+    if (!isset($latest_release->tag_name)) {
+        error_log('VX Support Plugin Update Check: Ungültige API-Antwort.');
+        echo 'Fehler beim Überprüfen auf Updates.';
+        return;
+    }
+
     $latest_version = $latest_release->tag_name;
     $current_version = vx_support_get_current_version();
+
+    error_log('Aktuelle Version: ' . $current_version);
+    error_log('Neueste Version: ' . $latest_version);
 
     if (version_compare($current_version, $latest_version, '<')) {
         echo 'Es ist eine neue Version des VX Media - Support & Security Plugins verfügbar. <a href="' . esc_url($latest_release->html_url) . '">Hier aktualisieren</a>.';

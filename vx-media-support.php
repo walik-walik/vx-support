@@ -38,7 +38,11 @@ add_action('admin_enqueue_scripts', 'vx_support_enqueue_scripts');
 
 function vx_support_check_for_updates() {
     $github_api_url = 'https://api.github.com/repos/walik-walik/vx-support/releases/latest';
-    $response = wp_remote_get($github_api_url);
+    $response = wp_remote_get($github_api_url, array(
+        'headers' => array(
+            'Authorization' => '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'
+        )
+    ));
 
     if (is_wp_error($response)) {
         error_log('VX Support Plugin Update Check failed: ' . $response->get_error_message());
@@ -65,6 +69,10 @@ function vx_support_check_for_updates() {
         echo 'Ihr Plugin ist auf dem neuesten Stand.';
     }
 }
+
+
+
+
 
 function vx_support_check_updates_ajax() {
     check_ajax_referer('vx_support_nonce', 'nonce');

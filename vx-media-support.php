@@ -1,6 +1,5 @@
 <?php
 /*
-/**
 Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
 Description: WP durch leistungsfähige und professionelle Codes erweitern.
@@ -14,7 +13,6 @@ BannerHigh: https://raw.githubusercontent.com/froger-me/wp-plugin-update-server/
 BannerLow: https://vx-media.de/VX-PLUGINS/vx-media-support/image/banner-722x250.png
  */
 
-
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -27,6 +25,47 @@ function vx_support_style()
 add_action('admin_enqueue_scripts', 'vx_support_style');
 
 
+// Update Checker hinzufügen
+function vx_support_check_for_updates() {
+    $github_api_url = 'https://api.github.com/repos/walik-walik/vx-support/releases/latest';
+    $response = wp_remote_get($github_api_url);
+    
+    if (is_wp_error($response)) {
+        return;
+    }
+    
+    $latest_release = json_decode(wp_remote_retrieve_body($response));
+    $latest_version = $latest_release->tag_name;
+    $current_version = '1.1.7'; // Hier die aktuelle Version deines Plugins eintragen
+    
+    if (version_compare($current_version, $latest_version, '<')) {
+        echo '<div class="update-nag notice notice-warning is-dismissible">
+                <p>Es ist eine neue Version des VX Media - Support & Security Plugins verfügbar. <a href="' . esc_url($latest_release->html_url) . '">Hier aktualisieren</a>.</p>
+              </div>';
+    }
+}
+
+add_action('admin_notices', 'vx_support_check_for_updates');
+
+
+// Cron-Job hinzufügen
+function vx_support_schedule_update_check() {
+    if (!wp_next_scheduled('vx_support_daily_update_check')) {
+        wp_schedule_event(time(), 'daily', 'vx_support_daily_update_check');
+    }
+}
+add_action('wp', 'vx_support_schedule_update_check');
+
+// Cron-Job ausführen
+add_action('vx_support_daily_update_check', 'vx_support_check_for_updates');
+
+// Cron-Job entfernen bei Deaktivierung des Plugins
+function vx_support_remove_update_check() {
+    $timestamp = wp_next_scheduled('vx_support_daily_update_check');
+    wp_unschedule_event($timestamp, 'vx_support_daily_update_check');
+}
+register_deactivation_hook(__FILE__, 'vx_support_remove_update_check');
+
 
 // VX MEDIA SUPPORT DASHBOARD
 add_action('wp_dashboard_setup', 'vx_media_dashboard_widgets');
@@ -37,13 +76,11 @@ function vx_media_dashboard_widgets()
     wp_add_dashboard_widget('vx_media_status_widget', 'VX Media GmbH | Status der Webseite', 'vx_media_dashboard_status');
 }
 
-
 // Hilfe Dashboard
 function vx_media_dashboard_help()
 {
-    $versionPlugin = "1.1.8";
+    $versionPlugin = "1.1.7"; // aktuelle Version hier anpassen
 ?>
-
     <div class="vx-support-wrapper">
         <p>Herzlich Willkommen in Ihrem Backend! Sie benötigen Hilfe? <br><br>Sie erreichen uns unter: <br>
             <strong>Mobil:</strong> 07303/9569185<br>
@@ -55,8 +92,8 @@ function vx_media_dashboard_help()
 
         <span>Version <?php echo $versionPlugin; ?></span>
     </div>
-
-    <?php }
+<?php
+}
 
 
 

@@ -79,7 +79,7 @@ function vx_media_dashboard_widgets()
 // Hilfe Dashboard
 function vx_media_dashboard_help()
 {
-    $versionPlugin = "1.1.7"; // aktuelle Version hier anpassen
+    $versionPlugin = "1.1.8"; // aktuelle Version hier anpassen
 ?>
     <div class="vx-support-wrapper">
         <p>Herzlich Willkommen in Ihrem Backend! Sie benötigen Hilfe? <br><br>Sie erreichen uns unter: <br>

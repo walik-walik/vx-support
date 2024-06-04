@@ -33,6 +33,8 @@ Ortsstrasse 31<br>
 
 
 == Changelog ==
+<strong>--- 1.1.8 ---<strong>
+
 <strong>--- 1.1.6 ---<strong>
 Securtiy // Admin URL
 

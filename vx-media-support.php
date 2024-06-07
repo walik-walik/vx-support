@@ -6,11 +6,6 @@ Description: WP durch leistungsfähige und professionelle Codes erweitern.
 Version: 2.0.2
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
-License: GPL12
-Icon1x: https://raw.githubusercontent.com/froger-me/wp-plugin-update-server/master/examples/icon-128x128.png
-Icon2x: https://raw.githubusercontent.com/froger-me/wp-plugin-update-server/master/examples/icon-256x256.png
-BannerHigh: https://raw.githubusercontent.com/froger-me/wp-plugin-update-server/master/examples/banner-1544x500.png
-BannerLow: https://vx-media.de/VX-PLUGINS/vx-media-support/image/banner-722x250.png
 */
 
 if (!defined('ABSPATH')) {
@@ -285,48 +280,21 @@ function my_admin_page_contents() {
 }
 
 add_action('admin_init', 'my_settings_init');
+
 function my_settings_init() {
     add_settings_section(
         'vxSettings_page_setting_section',
         __('Settings', 'vx-media'),
-        'my_setting_section_callback_function',
+        '__return_false', // Diese Funktion gibt false zurück und entfernt so den Einführungstext
         'vxSettings-page'
     );
 
-    add_settings_field(
-        'vx_license',
-        __('Wartungsvertrag Lizenz', 'vx-media'),
-        'vx_license_setting',
-        'vxSettings-page',
-        'vxSettings_page_setting_section'
-    );
-
-    add_settings_field(
-        'show_header',
-        'Header',
-        'sandbox_toggle_header_callback',
-        'vxSettings-page',
-        'vxSettings_page_setting_section',
-        array('Activate this setting to display the header.')
-    );
-
     register_setting('vxSettings-page', 'vx_license');
-    register_setting('vxSettings-page', 'show_header');
-}
-
-function my_setting_section_callback_function() {
-    echo '<p>Intro text for our settings section</p>';
 }
 
 function vx_license_setting() {
     ?>
     <input type="password" id="vx_license" name="vx_license" value="<?php echo get_option('vx_license'); ?>">
     <?php
-}
-
-function sandbox_toggle_header_callback($args) {
-    $html = '<input type="checkbox" id="show_header" name="show_header" value="1" ' . checked(1, get_option('show_header'), false) . '/>';
-    $html .= '<label for="show_header"> ' . $args[0] . '</label>';
-    echo $html;
 }
 ?>

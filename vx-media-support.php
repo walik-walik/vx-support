@@ -78,6 +78,7 @@ function vx_support_check_for_updates() {
     }
 }
 
+
 function vx_support_check_updates_ajax() {
     check_ajax_referer('vx_support_nonce', 'nonce');
 

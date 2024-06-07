@@ -35,20 +35,33 @@ function vx_support_check_for_updates() {
     $github_api_url = 'https://api.github.com/repos/walik-walik/vx-support/releases/latest';
     $response = wp_remote_get($github_api_url, array(
         'headers' => array(
-            'Authorization' => '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'
+            'User-Agent' => 'WordPress/' . get_bloginfo('version') . '; ' . get_bloginfo('url')
         )
     ));
 
     if (is_wp_error($response)) {
         error_log('VX Support Plugin Update Check failed: ' . $response->get_error_message());
-        echo 'Fehler beim Überprüfen auf Updates.';
+        echo 'Fehler beim Überprüfen auf Updates: ' . $response->get_error_message();
+        return;
+    }
+
+    $response_code = wp_remote_retrieve_response_code($response);
+    if ($response_code !== 200) {
+        error_log('VX Support Plugin Update Check: Ungültiger Antwortcode ' . $response_code);
+        echo 'Fehler beim Überprüfen auf Updates: Ungültiger Antwortcode ' . $response_code;
         return;
     }
 
     $latest_release = json_decode(wp_remote_retrieve_body($response));
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('VX Support Plugin Update Check: Fehler beim Parsen der API-Antwort');
+        echo 'Fehler beim Überprüfen auf Updates: Fehler beim Parsen der API-Antwort';
+        return;
+    }
+
     if (!isset($latest_release->tag_name)) {
         error_log('VX Support Plugin Update Check: Ungültige API-Antwort.');
-        echo 'Fehler beim Überprüfen auf Updates.';
+        echo 'Fehler beim Überprüfen auf Updates: Ungültige API-Antwort';
         return;
     }
 

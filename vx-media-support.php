@@ -12,6 +12,20 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
+// Include the update checker library.
+require 'plugin-update-checker/plugin-update-checker.php';
+
+// Initialize the update checker.
+$updateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'https://github.com/walik-walik/vx-support/', // GitHub repository URL.
+    __FILE__, // Full path to the main plugin file.
+    'vx-support' // Plugin slug.
+);
+
+// Optional: Set the branch that contains the stable release.
+$updateChecker->setBranch('main');
+
+
 function vx_support_get_current_version() {
     $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'));
     return $plugin_data['Version'];

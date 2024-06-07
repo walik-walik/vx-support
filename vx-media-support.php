@@ -3,7 +3,7 @@
 Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
 Description: WP durch leistungsfähige und professionelle Codes erweitern.
-Version: 2.0.5
+Version: 2.0.6
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
 */
@@ -12,19 +12,26 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-// Include the update checker library.
-require 'plugin-update-checker/plugin-update-checker.php';
+// Überprüfen Sie, ob die Datei existiert, bevor Sie sie einbinden
+if (file_exists(plugin_dir_path(__FILE__) . 'plugin-update-checker/plugin-update-checker.php')) {
+    // Include the update checker library.
+    require plugin_dir_path(__FILE__) . 'plugin-update-checker/plugin-update-checker.php';
 
-// Initialize the update checker.
-$updateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/walik-walik/vx-support/', // GitHub repository URL.
-    __FILE__, // Full path to the main plugin file.
-    'vx-support' // Plugin slug.
-);
+    // Initialize the update checker.
+    $updateChecker = Puc_v4_Factory::buildUpdateChecker(
+        'https://github.com/walik-walik/vx-support/', // GitHub repository URL.
+        __FILE__, // Full path to the main plugin file.
+        'vx-support' // Plugin slug.
+    );
 
-// Optional: Set the branch that contains the stable release.
-$updateChecker->setBranch('main');
-
+    // Optional: Set the branch that contains the stable release.
+    $updateChecker->setBranch('main');
+} else {
+    // Geben Sie eine Fehlermeldung aus, wenn die Datei nicht gefunden wird
+    add_action('admin_notices', function() {
+        echo '<div class="error"><p>Fehler: Die Datei plugin-update-checker/plugin-update-checker.php wurde nicht gefunden.</p></div>';
+    });
+}
 
 function vx_support_get_current_version() {
     $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'));

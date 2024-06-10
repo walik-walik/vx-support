@@ -3,34 +3,13 @@
 Plugin Name: VX Media - Support & Security
 Plugin URI: https://www.vx-media.de
 Description: WP durch leistungsfähige und professionelle Codes erweitern.
-Version: 2.0.6
+Version: 2.0.8
 Author: VX Media GmbH
 Author URI: https://www.vx-media.de
 */
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
-}
-
-// Überprüfen Sie, ob die Datei existiert, bevor Sie sie einbinden
-if (file_exists(plugin_dir_path(__FILE__) . 'plugin-update-checker/plugin-update-checker.php')) {
-    // Include the update checker library.
-    require plugin_dir_path(__FILE__) . 'plugin-update-checker/plugin-update-checker.php';
-
-    // Initialize the update checker.
-    $updateChecker = Puc_v4_Factory::buildUpdateChecker(
-        'https://github.com/walik-walik/vx-support/', // GitHub repository URL.
-        __FILE__, // Full path to the main plugin file.
-        'vx-support' // Plugin slug.
-    );
-
-    // Optional: Set the branch that contains the stable release.
-    $updateChecker->setBranch('main');
-} else {
-    // Geben Sie eine Fehlermeldung aus, wenn die Datei nicht gefunden wird
-    add_action('admin_notices', function() {
-        echo '<div class="error"><p>Fehler: Die Datei plugin-update-checker/plugin-update-checker.php wurde nicht gefunden.</p></div>';
-    });
 }
 
 function vx_support_get_current_version() {
@@ -51,82 +30,6 @@ function vx_support_enqueue_scripts() {
     ));
 }
 add_action('admin_enqueue_scripts', 'vx_support_enqueue_scripts');
-
-function vx_support_check_for_updates() {
-    $github_api_url = 'https://api.github.com/repos/walik-walik/vx-support/releases/latest';
-    $response = wp_remote_get($github_api_url, array(
-        'headers' => array(
-            'User-Agent' => 'WordPress/' . get_bloginfo('version') . '; ' . get_bloginfo('url')
-        )
-    ));
-
-    if (is_wp_error($response)) {
-        error_log('VX Support Plugin Update Check failed: ' . $response->get_error_message());
-        echo 'Fehler beim Überprüfen auf Updates: ' . $response->get_error_message();
-        return;
-    }
-
-    $response_code = wp_remote_retrieve_response_code($response);
-    if ($response_code !== 200) {
-        error_log('VX Support Plugin Update Check: Ungültiger Antwortcode ' . $response_code);
-        echo 'Fehler beim Überprüfen auf Updates: Ungültiger Antwortcode ' . $response_code;
-        return;
-    }
-
-    $latest_release = json_decode(wp_remote_retrieve_body($response));
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('VX Support Plugin Update Check: Fehler beim Parsen der API-Antwort');
-        echo 'Fehler beim Überprüfen auf Updates: Fehler beim Parsen der API-Antwort';
-        return;
-    }
-
-    if (!isset($latest_release->tag_name)) {
-        error_log('VX Support Plugin Update Check: Ungültige API-Antwort.');
-        echo 'Fehler beim Überprüfen auf Updates: Ungültige API-Antwort';
-        return;
-    }
-
-    $latest_version = ltrim($latest_release->tag_name, 'v'); // Entfernt 'v' vor der Versionsnummer
-    $current_version = vx_support_get_current_version();
-
-    // Debugging-Informationen hinzufügen
-    error_log('Aktuelle Version: ' . $current_version);
-    error_log('Neueste Version: ' . $latest_version);
-    echo 'Aktuelle Version: ' . $current_version . '<br>';
-    echo 'Neueste Version: ' . $latest_version . '<br>';
-
-    if (version_compare($current_version, $latest_version, '<')) {
-        echo 'Es ist eine neue Version des VX Media - Support & Security Plugins verfügbar. <a href="' . esc_url($latest_release->html_url) . '">Hier aktualisieren</a>.';
-    } else {
-        echo 'Ihr Plugin ist auf dem neuesten Stand.';
-    }
-}
-
-function vx_support_check_updates_ajax() {
-    check_ajax_referer('vx_support_nonce', 'nonce');
-
-    ob_start();
-    vx_support_check_for_updates();
-    $message = ob_get_clean();
-
-    wp_send_json_success($message);
-}
-add_action('wp_ajax_vx_support_check_updates', 'vx_support_check_updates_ajax');
-
-function vx_support_schedule_update_check() {
-    if (!wp_next_scheduled('vx_support_daily_update_check')) {
-        wp_schedule_event(time(), 'daily', 'vx_support_daily_update_check');
-    }
-}
-add_action('wp', 'vx_support_schedule_update_check');
-
-add_action('vx_support_daily_update_check', 'vx_support_check_for_updates');
-
-function vx_support_remove_update_check() {
-    $timestamp = wp_next_scheduled('vx_support_daily_update_check');
-    wp_unschedule_event($timestamp, 'vx_support_daily_update_check');
-}
-register_deactivation_hook(__FILE__, 'vx_support_remove_update_check');
 
 function vx_media_dashboard_widgets() {
     wp_add_dashboard_widget('vx_media_help_widget', 'VX Media GmbH | Hilfe & Support', 'vx_media_dashboard_help');
